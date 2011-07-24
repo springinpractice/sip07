@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	
+	<!-- Spring in Practice informational metadata -->
+	<context-param>
+		<param-name>recipe</param-name>
+		<param-value>7.1</param-value>
+	</context-param>
+	<context-param>
+		<param-name>appName</param-name>
+		<param-value>SiP University</param-value>
+	</context-param>
+	<context-param>
+		<param-name>aboutThisRecipe</param-name>
+		<param-value><![CDATA[
+<p>Recipe 7.1 shows how to authorize method calls based on user authentication
+level and roles. We adopt a paranoid "deny all" whitelisting approach that denies
+all access unless explicitly granted. See the type-level <code>@PreAuthorize("denyAll")</code>
+annotation we've added to the two service implementation beans.</p>
+
+<p>To see this in action, try logging in as <code>elvira</code>, and go to one
+of the forums she moderates. Select a message and try to block it. The app will
+not allow it, responding with a generic error message. (The error message is
+generic because eventually we won't even show the unauthorized actions, and so
+there's no need for a descriptive error message.) Because we don't yet have the
+ability to permit or deny actions based upon the principal's relationship to the
+forum and/or message, we're simply locking sensitive actions down.</p>
+
+<p>Note that user <code>juan</code> can perform administrative actions (like
+blocking and deleting messages) since his authorization is based on his admin
+role rather than on an ACL.</p>
+
+<p>The forum list on the home page is now empty for unauthenticated users. This
+is because we've added logic to suppress loading the forum list when the principal
+is unauthorized. We've done this because getting the forum list now requires
+authentiation, and here we don't want to force a login every time an unauthenticated
+user hits the home page.</p>
+
+<p>You can use any of the following usernames to log in. The password in each case is <code>p@ssword</code>.</p>
+<ul>
+<li><code>juan</code> (admin)</li>
+<li><code>elvira</code> (faculty member, student)</li>
+<li><code>julia</code> (faculty member)</li>
+<li><code>daniel</code> (student)</li>
+<li><code>paula</code> (no roles)</li>
+</ul>
+		]]></param-value>
+	</context-param>
+	
+	<!-- Configuration -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:/spring/beans-service.xml
+			classpath:/spring/beans-security.xml
+		</param-value>
+	</context-param>
+    
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<filter>
+		<filter-name>sitemesh</filter-name>
+		<filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>httpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	
+	<!-- This comes before Spring Security so we can see PUTs and DELETEs from Spring Security. -->
+	<filter-mapping>
+		<filter-name>httpMethodFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- This ensures that we style the default login page. -->
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/spring_security_login</url-pattern>
+	</filter-mapping>
+	
+	<!-- This comes next so security tags in pageTemplate.jsp can see security info. -->
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Finally style the page. -->
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:/spring/beans-web.xml</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>

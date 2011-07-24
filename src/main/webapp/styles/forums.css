@@ -1,0 +1,17 @@
+.byLine {
+	margin: 10px 0 20px;
+}
+
+.messageBody {
+	border: 1px solid #CCC;
+	padding: 10px 20px;
+	background-color: #F8F8F8;
+	
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+}
+
+th.numeric, td.numeric {
+	text-align: right;
+}

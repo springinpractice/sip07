@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.springinpractice</groupId>
+		<artifactId>com.springinpractice.top</artifactId>
+		<version>1.0-RELEASE</version>
+	</parent>
+	
+	<artifactId>com.springinpractice.07_01</artifactId>
+	<packaging>war</packaging>
+	
+	<name>Spring in Practice Recipe 7.1</name>
+	<description>
+		Authorize method calls based on user roles. Based on a paranoid "deny all" whitelisting approach.
+	</description>
+	<url>http://springinpractice.com/</url>
+	
+	<properties>
+		<chapter.number>07</chapter.number>
+		<chapter.conf.dir>${sip.conf.dir}/sip${chapter.number}</chapter.conf.dir>
+	</properties>
+	
+	<dependencies>
+	
+		<!-- Spring in Practice dependencies -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>com.springinpractice.api</artifactId>
+			<version>1.0-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>com.springinpractice.deps-hibernate</artifactId>
+			<version>1.0-RELEASE</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>com.springinpractice.deps-web</artifactId>
+			<version>1.0-RELEASE</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>com.springinpractice.skin</artifactId>
+			<version>1.0-RELEASE</version>
+			<type>war</type>
+		</dependency>
+		
+		<!-- Spring Security dependencies -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.taglibs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.web</artifactId>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<configuration>
+					<jettyEnvXml>${chapter.conf.dir}/jetty-env.xml</jettyEnvXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

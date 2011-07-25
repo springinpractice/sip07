@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-===============================================================================
-$Id: beans-security.xml 318 2011-04-18 05:25:31Z willie $
-
-Copyright (c) 2008-2011 Manning Publications Co.
-
-Willie Wheeler (willie.wheeler@gmail.com)
-
-Book web site   - http://www.manning.com/wheeler/
-Book blog       - http://springinpractice.com/
-Author web site - http://wheelersoftware.com/
-===============================================================================
--->
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:p="http://www.springframework.org/schema/p"
@@ -28,7 +14,7 @@ Author web site - http://wheelersoftware.com/
 	
 	<global-method-security pre-post-annotations="enabled" />
 	
-	<authentication-manager>
+	<authentication-manager alias="authenticationManager">
 		<authentication-provider user-service-ref="accountDao" />
 	</authentication-manager>
 </beans:beans>

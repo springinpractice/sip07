@@ -8,34 +8,27 @@
 
 <c:set var="forum" value="${message.forum}"/>
 <c:set var="forumPath" value="${forumsPath}/${forum.id}" />
-<c:set var="messagePath" value="${forumPath}/messages/${message.id}" />
-
-<c:url var="messageJsUrl" value="/scripts/message.js" />
 <c:url var="forumUrl" value="${forumPath}.html" />
+
+<c:set var="messagePath" value="${forumPath}/messages/${message.id}" />
+<c:url var="messageJsUrl" value="/scripts/message.js" />
 <c:url var="messageUrl" value="${messagePath}" />
+
 <c:url var="editMessageUrl" value="${messagePath}/edit.html" />
+
 <c:url var="moderatorUrl" value="${accountsPath}/${forum.owner.username}.html" />
 <c:url var="authorUrl" value="${accountsPath}/${message.author.username}.html" />
-
-<c:set var="blockedAlert">
-	<div id="blockedAlert" class="warning">This message has been blocked. Only administrators and forum moderators can see it.</div>
-</c:set>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title><c:out value="${message.subject}" /></title>
 		<link rel="stylesheet" type="text/css" href="${forumsCssUrl}" />
 		<script type="text/javascript">
-			var messageUrl = '${messageUrl}';
-			var blockedAlert = $('${blockedAlert}');
-			var blockLink = $('${blockLink}');
-			var unblockLink = $('${unblockLink}');
+			var messageUrl = '<c:out value="${messageUrl}" />';
 		</script>
 		<script type="text/javascript" src="${messageJsUrl}"></script>
 		<script type="text/javascript">
-			$(function() {
-				kickIt(<c:out value="${message.id}" />, <c:out value="${message.visible}" />);
-			});
+			$(function() { kickIt(<c:out value="${message.visible}" />); });
 		</script>
 	</head>
 	<body>
@@ -54,11 +47,7 @@
 			<div style="clear:both"></div>
 		</div>
 		
-		<c:if test="${!message.visible}">
-			<div class="warning alert">
-				This message has been blocked. Only administrators and forum moderators can see it.
-			</div>
-		</c:if>
+		<jsp:include page="blockedMessageWarningAlert.jsp" />
 		
 		<div class="byLine">
 			Posted by <span class="user icon"><a href="${authorUrl}"><c:out value="${message.author.fullName}" /></a></span>
@@ -72,14 +61,8 @@
 
 		<ul class="actionBar">
 			<li class="commentEdit icon"><a href="${editMessageUrl}" title="Edit message subject, text or visibility">Edit message</a></li>
-			<c:choose>
-				<c:when test="${message.visible}">
-					<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
-				</c:when>
-				<c:otherwise>
-					<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
-				</c:otherwise>
-			</c:choose>
+			<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
+			<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
 			<li id="deleteLink" class="commentDelete icon"><a href="#" title="Permanently delete this message">Delete message</a></li>
 		</ul>
 		

@@ -1,18 +1,19 @@
-function setMessageVisible(id, visible) {
+function blockMessage() {
 	$.ajax({
 		url: messageUrl + '/visible',
 		type: 'POST',
-		data: { _method: 'PUT', value: visible },
+		data: { _method: 'PUT', value: false },
 		success: function(data, textStatus, xhr) {
 			if (xhr.status == 200) {
-				refreshUi(visible);
+				$('#blockLink').hide();
+				$('#unblockLink').show();
+				$('#blockedAlert').slideDown();
 			} else {
 				this.error();
 			}
 		},
 		error: function() {
-			var action = (visible ? 'unblock' : 'block')
-			$('<div title="Error">An error occurred while trying to ' + action + ' the message.</div>').dialog({
+			$('<div title="Error">An error occurred while trying to block the message.</div>').dialog({
 				modal: true,
 				buttons: { Ok: function() { $(this).dialog('close'); } }
 			});
@@ -20,26 +21,36 @@ function setMessageVisible(id, visible) {
 	});
 }
 
-function refreshUi(visible) {
-	if (visible) {
-		$('#blockLink').show();
-		$('#unblockLink').hide();
-		$('#blockedAlert').slideUp();
-	} else {
-		$('#blockLink').hide();
-		$('#unblockLink').show();
-		$('#blockedAlertContainer').empty().append(blockedAlert);
-		$('#blockedAlert').hide().slideDown();
-	}
+function unblockMessage() {
+	$.ajax({
+		url: messageUrl + '/visible',
+		type: 'POST',
+		data: { _method: 'PUT', value: true },
+		success: function(data, textStatus, xhr) {
+			if (xhr.status == 200) {
+				$('#unblockLink').hide();
+				$('#blockLink').show();
+				$('#blockedAlert').slideUp();
+			} else {
+				this.error();
+			}
+		},
+		error: function() {
+			$('<div title="Error">An error occurred while trying to unblock the message.</div>').dialog({
+				modal: true,
+				buttons: { Ok: function() { $(this).dialog('close'); } }
+			});
+		}
+	});
 }
 
-function confirmDeleteMessage(id) {
+function confirmDeleteMessage() {
 	$('<div title="Confirm deletion">This will permanently delete this message. Are you sure?</div>').dialog({
 		modal: true,
 		width: 480,
 		buttons: {
 			'Delete message': function() {
-				actuallyDeleteMessage(id);
+				actuallyDeleteMessage();
 				$(this).dialog('close');
 			},
 			Cancel: function() { $(this).dialog('close'); }
@@ -47,14 +58,19 @@ function confirmDeleteMessage(id) {
 	});
 }
 
-function actuallyDeleteMessage(id) {
+function actuallyDeleteMessage() {
 	$('#deleteForm').submit();
 }
 
-function kickIt(id, visible) {
-	$('#blockUnblockContainer').empty().append(blockLink).append(unblockLink);
-	$('#blockLink a').click(function() { setMessageVisible(id, false); return false; });
-	$('#unblockLink a').click(function() { setMessageVisible(id, true); return false; });
-	$('#deleteLink a').click(function() { confirmDeleteMessage(id); return false; });
-	refreshUi(visible);
+function kickIt(visible) {
+	$('#blockLink a').click(function() { blockMessage(); return false; });
+	$('#unblockLink a').click(function() { unblockMessage(); return false; });
+	$('#deleteLink a').click(function() { confirmDeleteMessage(); return false; });
+	
+	if (visible) {
+		$("#blockedAlert").hide();
+		$("#unblockLink").hide();
+	} else {
+		$("#blockLink").hide();
+	}
 }

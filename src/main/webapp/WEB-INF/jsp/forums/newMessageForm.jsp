@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ include file="/WEB-INF/jsp/urls.jspf" %>
 
 <c:set var="forum" value="${message.forum}"/>
 <c:set var="forumPath" value="${forumsPath}/${forum.id}" />
@@ -35,24 +36,24 @@
 			</form:errors>
 			<div class="panel grid">
 				<div class="gridRow yui-gf">
-					<div class="yui-u first">
+					<div class="fieldLabel yui-u first">
 						<spring:message code="postNewMessage.label.subject" />
 					</div>
 					<div class="yui-u">
 						<form:input id="subjectField" path="subject" cssClass="long" cssErrorClass="long error" />
 						<form:errors path="subject">
-							<div class="formFieldError"><form:errors path="subject" htmlEscape="false" /></div>
+							<div class="errorMessage"><form:errors path="subject" htmlEscape="false" /></div>
 						</form:errors>
 					</div>
 				</div>
 				<div class="gridRow yui-gf">
-					<div class="yui-u first">
+					<div class="fieldLabel yui-u first">
 						<spring:message code="postNewMessage.label.text" />
 					</div>
 					<div class="yui-u">
 						<form:textarea id="textArea" path="text" cssClass="resizable" cssErrorClass="resizable error" />
 						<form:errors path="text">
-							<div class="formFieldError"><form:errors path="text" htmlEscape="false" /></div>
+							<div class="errorMessage"><form:errors path="text" htmlEscape="false" /></div>
 						</form:errors>
 					</div>
 				</div>

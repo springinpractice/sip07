@@ -49,10 +49,10 @@
 								<td class="numeric">${forum.numVisibleMessages}</td>
 								<td>
 									<c:if test="${not empty forum.lastVisibleMessageDate}">
-										<span class="date icon">${date}</span>
+										<span class="date icon" style="white-space:nowrap">${date}</span>
 									</c:if>
 								</td>
-								<td><span class="user icon"><a href="${ownerUrl}"><c:out value="${forum.owner.fullName}" /></a></span></td>
+								<td><span class="user icon" style="white-space:nowrap"><a href="${ownerUrl}"><c:out value="${forum.owner.fullName}" /></a></span></td>
 							</tr>
 						</c:forEach>
 					</tbody>

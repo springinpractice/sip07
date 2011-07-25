@@ -8,17 +8,23 @@
      object on the request. --%>
 <security:authentication var="myAccount" property="principal" />
 
-<div class="yui-gf">
-	<div id="topNav" class="yui-u first">
-		<a href="${homeUrl}">Home</a>
-		| <a href="${forumsUrl}">Forums</a>
-		| <a href="${adminUrl}">Admin</a>
+<div id="subhd" class="yui-g">
+	<div class="yui-u first">
+		<div id="topNav">
+			<ul>
+				<li><a href="${homeUrl}">Home</a></li>
+				<li><a href="${forumsUrl}">Forums</a></li>
+				<li><a href="${adminUrl}">Admin</a></li>
+			</ul>
+		</div>
 	</div>
-	<div id="sessionInfo" class="yui-u">
-		<c:if test="${myAccount != null}">
-			Hi, <c:out value="${myAccount}" /> |
-		</c:if>
-		<a href="${loginUrl}">Log in</a> |
-		<a href="${logoutUrl}">Log out</a>
+	<div class="yui-u">
+		<div id="sessionInfo">
+			<c:if test="${myAccount != null}">
+				Hi, <c:out value="${myAccount}" /> |
+			</c:if>
+			<a href="${loginUrl}">Log in</a> |
+			<a href="${logoutUrl}">Log out</a>
+		</div>
 	</div>
 </div>

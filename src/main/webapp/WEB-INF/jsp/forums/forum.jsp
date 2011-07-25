@@ -67,8 +67,8 @@
 									<a href="${messageUrl}"><c:out value="${message.subject}" /></a>
 									<c:if test="${not message.visible}"><b>[BLOCKED]</b></c:if>
 								</td>
-								<td><span class="user icon"><a href="${authorUrl}"><c:out value="${message.author.fullName}" /></a></span></td>
-								<td><span class="date icon">${date}</span></td>
+								<td><span class="user icon" style="white-space:nowrap"><a href="${authorUrl}"><c:out value="${message.author.fullName}" /></a></span></td>
+								<td><span class="date icon" style="white-space:nowrap">${date}</span></td>
 							</tr>
 						</c:forEach>
 					</tbody>

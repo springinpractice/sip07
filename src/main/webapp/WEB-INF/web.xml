@@ -7,7 +7,7 @@
 	<!-- Spring in Practice informational metadata -->
 	<context-param>
 		<param-name>recipe</param-name>
-		<param-value>7.3</param-value>
+		<param-value>7.4</param-value>
 	</context-param>
 	<context-param>
 		<param-name>appName</param-name>
@@ -16,7 +16,7 @@
 	<context-param>
 		<param-name>aboutThisRecipe</param-name>
 		<param-value><![CDATA[
-<p>Recipe 7.3 demonstrates how to use Spring Security to protect access to web URLs.</p>
+<p>We authorize method invocations based on Spring Security ACLs in recipe 7.4.</p>
 <p>You can use any of the following usernames to log in. The password in each case is <code>p@ssword</code>.</p>
 <ul>
 <li><code>juan</code> (user, admin)</li>
@@ -35,6 +35,7 @@
 			classpath:/spring/beans-service.xml
 			classpath:/spring/beans-security.xml
 			classpath:/spring/beans-security-special.xml
+			classpath:/spring/beans-security-acl.xml
 		</param-value>
 	</context-param>
     

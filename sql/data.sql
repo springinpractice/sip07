@@ -95,3 +95,119 @@ insert into message values (116, 105, 'Possible worlds semantics', 4, '<p>Lorem 
 insert into message values (117, 105, 'Kripke on naming and necessity', 2, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>', 1, '2010-09-28 14:31:22', null);
 insert into message values (118, 105, 'Nonconstructive proof that P != NP. Is it good enough??', 3, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>', 1, '2010-09-30 16:17:16', null);
 insert into message values (119, 105, 'Who is Archimedes Plutonium?', 1, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>', 1, '2010-09-30 19:43:53', null);
+
+
+-- =====================================================================================================================
+-- The following records are for the ACL schema.
+-- =====================================================================================================================
+
+-- Security IDs: an abstraction over roles and principals representing the "who" piece of the ACL check.
+insert into acl_sid (id, principal, sid) values
+    (100, 0, "ROLE_USER"),
+    (101, 0, "ROLE_ADMIN"),
+    (200, 1, "paula"),
+    (201, 1, "daniel"),
+    (202, 1, "julia"),
+    (203, 1, "elvira"),
+    (204, 1, "juan");
+
+-- Defines the domain object types. This is part of the "what" check. We have a site, forums and messages.
+insert into acl_class (id, class) values
+    (1, "java.lang.Object"),
+    (2, "com.springinpractice.ch07.domain.Forum"),
+    (3, "com.springinpractice.ch07.domain.Message");
+
+-- Domain object instances. This is the other part of the "what" check.
+insert into acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
+    (1, 1, 1, null, 101, 0), -- Site object
+    
+    (100, 2, 100, 1, 202, 1), -- Algebra I forum, moderated by julia
+    (101, 2, 101, 1, 202, 1), -- Algebra II/Trig forum, moderated by julia
+    (102, 2, 102, 1, 202, 1), -- Precalc forum, moderated by julia
+    (103, 2, 103, 1, 203, 1), -- Calc I forum, moderated by elvira
+    (104, 2, 104, 1, 203, 1), -- Calc II forum, moderated by elvira
+    (105, 2, 105, 1, 203, 1), -- Modal Logic forum, moderated by elvira
+    
+    (106, 3, 100, 100, 202, 1), -- Algebra I messages (parent is 100)
+    (107, 3, 101, 100, 204, 1),
+    (108, 3, 102, 100, 202, 1),
+    (109, 3, 103, 101, 203, 1), -- Algebra II/Trig messages (parent is 101)
+    (110, 3, 104, 101, 200, 1),
+    (111, 3, 105, 101, 203, 1), -- spam
+    (112, 3, 106, 101, 201, 1),
+    (113, 3, 107, 101, 201, 1),
+    (114, 3, 108, 102, 202, 1), -- Precalc messages (parent is 102)
+    (115, 3, 109, 102, 204, 1),
+    (116, 3, 110, 102, 202, 1),
+    (117, 3, 111, 104, 203, 1), -- Calc II messages (parent is 104)
+    (118, 3, 112, 104, 201, 1),
+    (119, 3, 113, 104, 200, 1),
+    (120, 3, 114, 104, 202, 1),
+    (121, 3, 115, 104, 202, 1),
+    (122, 3, 116, 105, 203, 1), -- Modal Logic messages (parent is 105)
+    (123, 3, 117, 105, 201, 1),
+    (124, 3, 118, 105, 202, 1),
+    (125, 3, 119, 105, 200, 1);
+
+-- ACL entries. These specify who has which permission on which object.
+-- Bitwise permission mask semantics: read (bit 0), write (bit 1), create (bit 2), delete (bit 3), admin (bit 4).
+-- WARNING: The "mask" isn't really a mask at all as you can set only one bit at a time! See
+-- http://jira.springframework.org/browse/SEC-1140
+insert into acl_entry (id, acl_object_identity, ace_order, sid, mask, granting, audit_success, audit_failure) values 
+    (0, 1, 0, 100, 1, 1, 0, 0), -- ROLE_USER has read for site
+    (0, 1, 1, 101, 1, 1, 0, 0), -- ROLE_ADMIN has read for site
+    (0, 1, 2, 101, 2, 1, 0, 0), -- ROLE_ADMIN has write for site
+    (0, 1, 3, 101, 4, 1, 0, 0), -- ROLE_ADMIN has create for site
+    (0, 1, 4, 101, 8, 1, 0, 0), -- ROLE_ADMIN has delete for site
+    (0, 1, 5, 101, 16, 1, 0, 0), -- ROLE_ADMIN has admin for site
+
+    (0, 100, 0, 202, 1, 1, 0, 0), -- julia has read for Algebra I
+    (0, 100, 1, 202, 2, 1, 0, 0), -- julia has write for Algebra I
+    (0, 100, 2, 202, 4, 1, 0, 0), -- julia has create for Algebra I
+    (0, 100, 3, 202, 8, 1, 0, 0), -- julia has delete for Algebra I
+    (0, 100, 4, 202, 16, 1, 0, 0), -- julia has admin for Algebra I
+    (0, 101, 0, 202, 1, 1, 0, 0), -- julia has read for Algebra II
+    (0, 101, 1, 202, 2, 1, 0, 0), -- julia has write for Algebra II
+    (0, 101, 2, 202, 4, 1, 0, 0), -- julia has create for Algebra II
+    (0, 101, 3, 202, 8, 1, 0, 0), -- julia has delete for Algebra II
+    (0, 101, 4, 202, 16, 1, 0, 0), -- julia has admin for Algebra II
+    (0, 102, 0, 202, 1, 1, 0, 0), -- julia has read for Precalc
+    (0, 102, 1, 202, 2, 1, 0, 0), -- julia has write for Precalc
+    (0, 102, 2, 202, 4, 1, 0, 0), -- julia has create for Precalc
+    (0, 102, 3, 202, 8, 1, 0, 0), -- julia has delete for Precalc
+    (0, 102, 4, 202, 16, 1, 0, 0), -- julia has admin for Precalc
+    (0, 103, 0, 203, 1, 1, 0, 0), -- elvira has read for Calc I
+    (0, 103, 1, 203, 2, 1, 0, 0), -- elvira has write for Calc I
+    (0, 103, 2, 203, 4, 1, 0, 0), -- elvira has create for Calc I
+    (0, 103, 3, 203, 8, 1, 0, 0), -- elvira has delete for Calc I
+    (0, 103, 4, 203, 16, 1, 0, 0), -- elvira has admin for Calc I
+    (0, 104, 0, 203, 1, 1, 0, 0), -- elvira has read for Calc II
+    (0, 104, 1, 203, 2, 1, 0, 0), -- elvira has write for Calc II
+    (0, 104, 2, 203, 4, 1, 0, 0), -- elvira has create for Calc II
+    (0, 104, 3, 203, 8, 1, 0, 0), -- elvira has delete for Calc II
+    (0, 104, 4, 203, 16, 1, 0, 0), -- elvira has admin for Calc II
+    (0, 105, 0, 203, 1, 1, 0, 0), -- elvira has read for Modal Logic
+    (0, 105, 1, 203, 2, 1, 0, 0), -- elvira has write for Modal Logic
+    (0, 105, 2, 203, 4, 1, 0, 0), -- elvira has create for Modal Logic
+    (0, 105, 3, 203, 8, 1, 0, 0), -- elvira has delete for Modal Logic
+    (0, 105, 4, 203, 16, 1, 0, 0), -- elvira has admin for Modal Logic
+
+    (0, 106, 0, 202, 2, 1, 0, 0), -- julia has write access (Algebra I message)
+    (0, 107, 0, 204, 2, 1, 0, 0), -- juan has write access (Algebra I message)
+    (0, 108, 0, 202, 2, 1, 0, 0), -- julia has write access (Algebra I message)
+    (0, 109, 0, 203, 2, 1, 0, 0), -- elvira has write access (Algebra II/Trig message)
+    (0, 110, 0, 200, 2, 1, 0, 0), -- paula has write access (Algebra II/Trig message)
+    (0, 112, 0, 201, 2, 1, 0, 0), -- daniel has write access (Algebra II/Trig message)
+    (0, 113, 0, 201, 2, 1, 0, 0), -- daniel has write access (Algebra II/Trig message)
+    (0, 114, 0, 202, 2, 1, 0, 0), -- julia has write access (Precalc message)
+    (0, 115, 0, 204, 2, 1, 0, 0), -- juan has write access (Precalc message)
+    (0, 116, 0, 202, 2, 1, 0, 0), -- julia has write access (Precalc message)
+    (0, 117, 0, 203, 2, 1, 0, 0), -- elvira has write access (Calc II message)
+    (0, 118, 0, 201, 2, 1, 0, 0), -- daniel has write access (Calc II message)
+    (0, 119, 0, 200, 2, 1, 0, 0), -- paula has write access (Calc II message)
+    (0, 120, 0, 202, 2, 1, 0, 0), -- julia has write access (Calc II message)
+    (0, 121, 0, 202, 2, 1, 0, 0), -- julia has write access (Calc II message)
+    (0, 122, 0, 203, 2, 1, 0, 0), -- elvira has write access (Modal Logic message)
+    (0, 123, 0, 201, 2, 1, 0, 0), -- daniel has write access (Modal Logic message)
+    (0, 124, 0, 202, 2, 1, 0, 0), -- julia has write access (Modal Logic message)
+    (0, 125, 0, 200, 2, 1, 0, 0); -- paula has write access (Modal Logic message)

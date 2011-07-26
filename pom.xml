@@ -11,12 +11,12 @@
 		<version>1.0-RELEASE</version>
 	</parent>
 	
-	<artifactId>com.springinpractice.07_03</artifactId>
+	<artifactId>com.springinpractice.07_04</artifactId>
 	<packaging>war</packaging>
 	
-	<name>Spring in Practice Recipe 7.3</name>
+	<name>Spring in Practice Recipe 7.4</name>
 	<description>
-		Recipe 7.3 demonstrates how to use Spring Security to protect access to web URLs.
+		We authorize method invocations based on Spring Security ACLs in recipe 7.4.
 	</description>
 	<url>http://springinpractice.com/</url>
 	
@@ -55,6 +55,10 @@
 		<!-- Spring Security dependencies -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
+			<artifactId>org.springframework.security.acls</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
 			<artifactId>org.springframework.security.config</artifactId>
 		</dependency>
 		<dependency>
@@ -68,6 +72,12 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>org.springframework.security.web</artifactId>
+		</dependency>
+		
+		<!-- Ehcache for ACL caching -->
+		<dependency>
+			<groupId>net.sourceforge.ehcache</groupId>
+			<artifactId>com.springsource.net.sf.ehcache</artifactId>
 		</dependency>
 	</dependencies>
 	

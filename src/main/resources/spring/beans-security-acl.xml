@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+===============================================================================
+$Id: beans-security-acl.xml 318 2011-04-18 05:25:31Z willie $
+
+Copyright (c) 2008-2011 Manning Publications Co.
+
+Willie Wheeler (willie.wheeler@gmail.com)
+
+Book web site   - http://www.manning.com/wheeler/
+Book blog       - http://springinpractice.com/
+Author web site - http://wheelersoftware.com/
+===============================================================================
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+	
+	
+	<!-- ================================================================== -->
+	<!-- ACL service                                                        -->
+	<!-- ================================================================== -->
+	
+	<bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+		<constructor-arg>
+			<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean" p:cacheName="aclCache">
+				<property name="cacheManager">
+					<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+				</property>
+			</bean>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="adminRole" class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+		<constructor-arg value="admin" />
+	</bean>
+	
+	<bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg ref="aclCache" />
+		<constructor-arg>
+		
+			<!-- Decides whether current principal can make ACL changes. See
+			     AclAuthorizationStrategyImpl Javadoc for the rules involved. -->
+			<bean class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+				<constructor-arg>
+					<list>
+						<!-- Role required to change ACL ownership -->
+						<ref local="adminRole" />
+						
+						<!-- Role required to change auditing details -->
+						<ref local="adminRole" />
+						
+						<!-- Role required to change other ACL/ACE details -->
+						<ref local="adminRole" />
+					</list>
+				</constructor-arg>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="org.springframework.security.acls.domain.ConsoleAuditLogger" />
+		</constructor-arg>
+	</bean>
+	
+	<bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg ref="lookupStrategy" />
+		<constructor-arg ref="aclCache" />
+	</bean>
+	
+	
+	<!-- ================================================================== -->
+	<!-- Expression handler                                                 -->
+	<!-- ================================================================== -->
+	
+	<!-- Knows how to evaluate hasPermission() expressions -->
+	<bean id="permissionEvaluator" class="org.springframework.security.acls.AclPermissionEvaluator">
+		<constructor-arg ref="aclService" />
+	</bean>
+	
+	<!-- Supports authorization based on expressions -->
+	<bean id="expressionHandler"
+		class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler"
+		p:permissionEvaluator-ref="permissionEvaluator" />
+
+</beans>

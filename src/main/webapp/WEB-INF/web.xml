@@ -7,7 +7,7 @@
 	<!-- Spring in Practice informational metadata -->
 	<context-param>
 		<param-name>recipe</param-name>
-		<param-value>7.1</param-value>
+		<param-value>7.2</param-value>
 	</context-param>
 	<context-param>
 		<param-name>appName</param-name>
@@ -16,29 +16,8 @@
 	<context-param>
 		<param-name>aboutThisRecipe</param-name>
 		<param-value><![CDATA[
-<p>Recipe 7.1 shows how to authorize method calls based on user authentication
-level and roles. We adopt a paranoid "deny all" whitelisting approach that denies
-all access unless explicitly granted. See the type-level <code>@PreAuthorize("denyAll")</code>
-annotation we've added to the two service implementation beans.</p>
-
-<p>To see this in action, try logging in as <code>elvira</code>, and go to one
-of the forums she moderates. Select a message and try to block it. The app will
-not allow it, responding with a generic error message. (The error message is
-generic because eventually we won't even show the unauthorized actions, and so
-there's no need for a descriptive error message.) Because we don't yet have the
-ability to permit or deny actions based upon the principal's relationship to the
-forum and/or message, we're simply locking sensitive actions down.</p>
-
-<p>Note that user <code>juan</code> can perform administrative actions (like
-blocking and deleting messages) since his authorization is based on his admin
-role rather than on an ACL.</p>
-
-<p>The forum list on the home page is now empty for unauthenticated users. This
-is because we've added logic to suppress loading the forum list when the principal
-is unauthorized. We've done this because getting the forum list now requires
-authentiation, and here we don't want to force a login every time an unauthenticated
-user hits the home page.</p>
-
+<p>In recipe 7.2 we displays page content based on authentication level and role. Only authenticated users can see the
+"My Account" link, for example, and only juan can see the block/unblock and delete links.</p>
 <p>You can use any of the following usernames to log in. The password in each case is <code>p@ssword</code>.</p>
 <ul>
 <li><code>juan</code> (user, admin)</li>

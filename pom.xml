@@ -11,12 +11,12 @@
 		<version>1.0-RELEASE</version>
 	</parent>
 	
-	<artifactId>com.springinpractice.07_01</artifactId>
+	<artifactId>com.springinpractice.07_02</artifactId>
 	<packaging>war</packaging>
 	
-	<name>Spring in Practice Recipe 7.1</name>
+	<name>Spring in Practice Recipe 7.2</name>
 	<description>
-		Authorize method calls based on user roles. Based on a paranoid "deny all" whitelisting approach.
+		In recipe 7.2 we displays page content based on authentication level and role.
 	</description>
 	<url>http://springinpractice.com/</url>
 	

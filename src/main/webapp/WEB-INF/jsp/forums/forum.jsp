@@ -3,6 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ include file="/WEB-INF/jsp/urls.jspf" %>
 
 <c:set var="messagesPath" value="${forumsPath}/${forum.id}/messages" />
@@ -39,12 +40,19 @@
 		
 		<c:choose>
 			<c:when test="${empty forum.messages}">
-				<p>Be the first to <a href="${postMessageUrl}">post a message</a>.</p>
+				<security:authorize access="hasRole('PERM_CREATE_MESSAGES')">
+					<p>Be the first to <a href="${postMessageUrl}">post a message</a>.</p>
+				</security:authorize>
+				<security:authorize access="!hasRole('PERM_CREATE_MESSAGES')">
+					<p>There are no messages.</p>
+				</security:authorize>
 			</c:when>
 			<c:otherwise>
 				<div class="tableActionBar">
 					${forum.numVisibleMessages} messages
-					| <span class="commentAdd icon"><a href="${postMessageUrl}">Post message</a></span>
+					<security:authorize access="hasRole('PERM_CREATE_MESSAGES')">
+						| <span class="commentAdd icon"><a href="${postMessageUrl}">Post message</a></span>
+					</security:authorize>
 				</div>
 				<table id="messageList" class="table tablesorter">
 					<thead>

@@ -13,18 +13,34 @@
 		<div id="topNav">
 			<ul>
 				<li><a href="${homeUrl}">Home</a></li>
-				<li><a href="${forumsUrl}">Forums</a></li>
-				<li><a href="${adminUrl}">Admin</a></li>
+				<security:authorize access="hasRole('PERM_READ_FORUMS')">
+					<li><a href="${forumsUrl}">Forums</a></li>
+				</security:authorize>
+				<security:authorize access="isAuthenticated()">
+					<c:url var="myAccountUrl" value="${accountsPath}/${myAccount.username}.html" />
+					<li><a href="${myAccountUrl}">My Account</a></li>
+				</security:authorize>
+				<security:authorize access="hasRole('ROLE_ADMIN')">
+					<li><a href="${adminUrl}">Admin</a></li>
+				</security:authorize>
 			</ul>
 		</div>
 	</div>
 	<div class="yui-u">
 		<div id="sessionInfo">
-			<c:if test="${myAccount != null}">
-				Hi, <c:out value="${myAccount}" /> |
-			</c:if>
-			<a href="${loginUrl}">Log in</a> |
-			<a href="${logoutUrl}">Log out</a>
+			<security:authorize access="isAnonymous()">
+				Hi, guest
+			</security:authorize>
+			<security:authorize access="isAuthenticated()">
+				Hi, <c:out value="${myAccount.fullName}" />
+			</security:authorize>
+			|
+			<security:authorize access="isAnonymous()">
+				<a href="${loginUrl}">Log in</a>
+			</security:authorize>
+			<security:authorize access="isAuthenticated()">
+				<a href="${logoutUrl}">Log out</a>
+			</security:authorize>
 		</div>
 	</div>
 </div>

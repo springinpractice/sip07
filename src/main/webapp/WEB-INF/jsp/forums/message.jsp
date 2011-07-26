@@ -3,6 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/urls.jspf" %>
 
@@ -61,9 +62,13 @@
 
 		<ul class="actionBar">
 			<li class="commentEdit icon"><a href="${editMessageUrl}" title="Edit message subject, text or visibility">Edit message</a></li>
-			<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
-			<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
-			<li id="deleteLink" class="commentDelete icon"><a href="#" title="Permanently delete this message">Delete message</a></li>
+			<security:authorize access="hasRole('PERM_UPDATE_MESSAGES')">
+				<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
+				<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
+			</security:authorize>
+			<security:authorize access="hasRole('PERM_DELETE_MESSAGES')">
+				<li id="deleteLink" class="commentDelete icon"><a href="#" title="Permanently delete this message">Delete message</a></li>
+			</security:authorize>
 		</ul>
 		
 		<form id="deleteForm" action="${messageUrl}" method="post">

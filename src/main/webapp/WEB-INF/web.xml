@@ -7,7 +7,7 @@
 	<!-- Spring in Practice informational metadata -->
 	<context-param>
 		<param-name>recipe</param-name>
-		<param-value>7.2</param-value>
+		<param-value>7.3</param-value>
 	</context-param>
 	<context-param>
 		<param-name>appName</param-name>
@@ -16,8 +16,7 @@
 	<context-param>
 		<param-name>aboutThisRecipe</param-name>
 		<param-value><![CDATA[
-<p>In recipe 7.2 we displays page content based on authentication level and role. Only authenticated users can see the
-"My Account" link, for example, and only juan can see the block/unblock and delete links.</p>
+<p>Recipe 7.3 demonstrates how to use Spring Security to protect access to web URLs.</p>
 <p>You can use any of the following usernames to log in. The password in each case is <code>p@ssword</code>.</p>
 <ul>
 <li><code>juan</code> (user, admin)</li>

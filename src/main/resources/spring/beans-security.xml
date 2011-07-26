@@ -10,6 +10,46 @@
 		<form-login default-target-url="/home.html" />
 		<logout logout-success-url="/home.html" />
 		<access-denied-handler error-page="/accessdenied.html"/>
+		
+		<!-- Unfiltered -->
+		<intercept-url pattern="/skin/**" filters="none" />
+		<intercept-url pattern="/extras/**" filters="none" />
+		<intercept-url pattern="/styles/**" filters="none" />
+		<intercept-url pattern="/scripts/**" filters="none" />
+		<intercept-url pattern="/images/**" filters="none" />
+		
+		<!-- Whitelist. Being very paranoid here, which is a security best practice. -->
+		
+		<!-- Get home page -->
+		<!-- This requires filtering for the controller test and taglib -->
+		<intercept-url pattern="/home.html" method="GET" access="permitAll" />
+		
+		<!-- Admin console -->
+		<intercept-url pattern="/admin.html" method="GET" access="hasRole('ROLE_ADMIN')" />
+		
+		<!-- Get individual forum -->
+		<!-- /forums doesn't work. It has to be /forums.html. -->
+		<intercept-url pattern="/forums.html" method="GET" access="isAuthenticated()" />
+		<intercept-url pattern="/forums/*" method="GET" access="isAuthenticated()" />
+		
+		<!-- Post new message -->
+		<intercept-url pattern="/forums/*/messages" method="POST" access="isAuthenticated()" />
+		
+		<!-- Get individual message -->
+		<intercept-url pattern="/forums/*/messages/*" method="GET" access="isAuthenticated()" />
+		
+		<!-- Various message operations. Just block unauthenticated users, and we'll rely on ACLs to authorize specific
+		     requests. -->
+		<intercept-url pattern="/forums/*/messages/*/edit.html" method="GET" access="isAuthenticated()" />
+		<intercept-url pattern="/forums/*/messages/*" method="PUT" access="isAuthenticated()" />
+		<intercept-url pattern="/forums/*/messages/*/visible" method="PUT" access="isAuthenticated()" />
+		<intercept-url pattern="/forums/*/messages/*" method="DELETE" access="isAuthenticated()" />
+		
+		<intercept-url pattern="/accounts/*" method="GET" access="isAuthenticated()" />
+		
+		<!-- Deny all policy by default, using expressions. This is part of our paranoia. This comes last since match
+		     policy is first-match. -->
+		<intercept-url pattern="/**" access="denyAll" />
 	</http>
 	
 	<global-method-security pre-post-annotations="enabled" />

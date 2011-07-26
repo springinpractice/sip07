@@ -37,7 +37,9 @@
 			<div class="info alert">Message saved. <a href="${messageUrl}">View it</a></div>
 		</c:if>
 		
-		<jsp:include page="blockedMessageWarningAlert.jsp" />
+		<c:if test="${!originalMessage.visible}">
+			<jsp:include page="blockedMessageWarningAlert.jsp" />
+		</c:if>
 		
 		<form:form cssClass="main" modelAttribute="message" action="${messageUrl}">
 			<input type="hidden" name="_method" value="PUT" />

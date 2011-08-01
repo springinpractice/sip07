@@ -25,7 +25,7 @@
 				<p>No forums.</p>
 			</c:when>
 			<c:otherwise>
-				<table id="forumList" class="table sortable">
+				<table id="forumList" class="sortable">
 					<thead>
 						<tr>
 							<th>Forum</th>

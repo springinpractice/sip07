@@ -14,9 +14,7 @@
 		<title><c:out value="${forum.name}" /></title>
 		<link rel="stylesheet" type="text/css" href="${forumsCssUrl}" />
 		<script type="text/javascript">
-			$(function() {
-				$('#messageList').tablesorter({ sortList: [ [2, 1] ], textExtraction: "complex" });
-			});
+			$(function() { $("#messageList").tablesorter({ sortList: [ [2, 1] ], textExtraction: "complex" }); });
 		</script>
 	</head>
 	<body>
@@ -46,7 +44,7 @@
 					${forum.numVisibleMessages} messages
 					| <span class="commentAdd icon"><a href="${postMessageUrl}">Post message</a></span>
 				</div>
-				<table id="messageList" class="table tablesorter">
+				<table id="messageList" class="table sortable">
 					<thead>
 						<tr>
 							<th>Message</th>

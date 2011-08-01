@@ -10,9 +10,7 @@
 		<title>Forums</title>
 		<link rel="stylesheet" type="text/css" href="${forumsCssUrl}" />
 		<script type="text/javascript">
-			$(function() {
-				$('#forumList').tablesorter({ sortList: [ [0, 0] ], textExtraction: "complex" });
-			});
+			$(function() { $("#forumList").tablesorter({ sortList: [ [0, 0] ], textExtraction: "complex" }); });
 		</script>
 	</head>
 	<body>
@@ -27,12 +25,12 @@
 				<p>No forums.</p>
 			</c:when>
 			<c:otherwise>
-				<table id="forumList" class="table tablesorter">
+				<table id="forumList" class="table sortable">
 					<thead>
 						<tr>
 							<th>Forum</th>
 							<th class="numeric">#&nbsp;posts</th>
-							<th>Last post</th>
+							<th class="date">Last post</th>
 							<th>Moderator</th>
 						</tr>
 					</thead>

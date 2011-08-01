@@ -15,9 +15,7 @@
 		<title><c:out value="${forum.name}" /></title>
 		<link rel="stylesheet" type="text/css" href="${forumsCssUrl}" />
 		<script type="text/javascript">
-			$(function() {
-				$('#messageList').tablesorter({ sortList: [ [2, 1] ], textExtraction: "complex" });
-			});
+			$(function() { $("#messageList").tablesorter({ sortList: [ [2, 1] ], textExtraction: "complex" }); });
 		</script>
 	</head>
 	<body>
@@ -54,12 +52,12 @@
 						| <span class="commentAdd icon"><a href="${postMessageUrl}">Post message</a></span>
 					</security:authorize>
 				</div>
-				<table id="messageList" class="table tablesorter">
+				<table id="messageList" class="table sortable">
 					<thead>
 						<tr>
 							<th>Message</th>
 							<th>Author</th>
-							<th>Date</th>
+							<th class="date">Date</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -59,22 +59,25 @@
 		<div class="pane">
 			<c:out value="${message.text}" escapeXml="false" />
 		</div>
-
-		<ul class="actionBar">
-			<security:accesscontrollist hasPermission="2" domainObject="${message}">
-				<li class="commentEdit icon"><a href="${editMessageUrl}" title="Edit message subject, text or visibility">Edit message</a></li>
-			</security:accesscontrollist>
-			<security:accesscontrollist hasPermission="16" domainObject="${message}">
-				<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
-				<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
-			</security:accesscontrollist>
-			<security:accesscontrollist hasPermission="8" domainObject="${message}">
-				<li id="deleteLink" class="commentDelete icon"><a href="#" title="Permanently delete this message">Delete message</a></li>
-			</security:accesscontrollist>
-		</ul>
 		
-		<form id="deleteForm" action="${messageUrl}" method="post">
-			<div><input type="hidden" name="_method" value="DELETE" /></div>
-		</form>
+		<security:accesscontrollist hasPermission="2,8,16" domainObject="${message}">
+			<ul class="actionBar">
+				<security:accesscontrollist hasPermission="2" domainObject="${message}">
+					<li class="commentEdit icon"><a href="${editMessageUrl}" title="Edit message subject, text or visibility">Edit message</a></li>
+				</security:accesscontrollist>
+				<security:accesscontrollist hasPermission="16" domainObject="${message}">
+					<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
+					<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
+				</security:accesscontrollist>
+				<security:accesscontrollist hasPermission="8" domainObject="${message}">
+					<li id="deleteLink" class="commentDelete icon"><a href="#" title="Permanently delete this message">Delete message</a></li>
+				</security:accesscontrollist>
+			</ul>
+			<security:accesscontrollist hasPermission="8" domainObject="${message}">
+				<form id="deleteForm" action="${messageUrl}" method="post">
+					<div><input type="hidden" name="_method" value="DELETE" /></div>
+				</form>
+			</security:accesscontrollist>
+		</security:accesscontrollist>
 	</body>
 </html>

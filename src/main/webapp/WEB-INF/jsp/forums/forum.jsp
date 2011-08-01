@@ -52,7 +52,7 @@
 						| <span class="commentAdd icon"><a href="${postMessageUrl}">Post message</a></span>
 					</security:authorize>
 				</div>
-				<table id="messageList" class="table sortable">
+				<table id="messageList" class="sortable">
 					<thead>
 						<tr>
 							<th>Message</th>

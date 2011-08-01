@@ -61,14 +61,22 @@
 		</div>
 
 		<ul class="actionBar">
-			<li class="commentEdit icon"><a href="${editMessageUrl}" title="Edit message subject, text or visibility">Edit message</a></li>
-			<security:authorize access="hasRole('PERM_UPDATE_MESSAGES')">
-				<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
-				<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
-			</security:authorize>
-			<security:authorize access="hasRole('PERM_DELETE_MESSAGES')">
+			<security:accesscontrollist hasPermission="2" domainObject="${message}">
+				<li class="commentEdit icon"><a href="${editMessageUrl}" title="Edit message subject, text or visibility">Edit message</a></li>
+			</security:accesscontrollist>
+			<security:accesscontrollist hasPermission="16" domainObject="${message}">
+				<c:choose>
+					<c:when test="${message.visible}">
+						<li id="blockLink" class="cancel icon"><a href="#" title="Hide messages from users without deleting it">Block message</a></li>
+					</c:when>
+					<c:otherwise>
+						<li id="unblockLink" class="accept icon"><a href="#" title="Allow users to see this message again">Unblock message</a></li>
+					</c:otherwise>
+				</c:choose>
+			</security:accesscontrollist>
+			<security:accesscontrollist hasPermission="8" domainObject="${message}">
 				<li id="deleteLink" class="commentDelete icon"><a href="#" title="Permanently delete this message">Delete message</a></li>
-			</security:authorize>
+			</security:accesscontrollist>
 		</ul>
 		
 		<form id="deleteForm" action="${messageUrl}" method="post">

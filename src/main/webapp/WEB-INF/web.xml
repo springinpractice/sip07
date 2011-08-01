@@ -7,7 +7,7 @@
 	<!-- Spring in Practice informational metadata -->
 	<context-param>
 		<param-name>recipe</param-name>
-		<param-value>7.4</param-value>
+		<param-value>7.5</param-value>
 	</context-param>
 	<context-param>
 		<param-name>appName</param-name>
@@ -16,7 +16,7 @@
 	<context-param>
 		<param-name>aboutThisRecipe</param-name>
 		<param-value><![CDATA[
-<p>We authorize method invocations based on Spring Security ACLs in recipe 7.4.</p>
+<p>Recipe 7.5 shows how to display JSP fragments selectively based on ACLs.</p>
 <p>You can use any of the following usernames to log in. The password in each case is <code>p@ssword</code>.</p>
 <ul>
 <li><code>juan</code> (user, admin)</li>

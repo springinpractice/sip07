@@ -49,13 +49,13 @@ insert into role_permission (role_id, permission_id) values
     (2, 14), -- admin can delete messages
     (2, 15); -- admin can admin messages
 
-insert into forum (id, name, owner_id) values
-    (100, 'Algebra I', 3),
-    (101, 'Algebra II/Trigonometry', 3),
-    (102, 'Precalculus', 3),
-    (103, 'Calculus I', 4),
-    (104, 'Calculus II', 4),
-    (105, 'Model theory of second-order intuitionistic modal logics', 4);
+insert into forum (id, owner_id, name) values
+    (100, 3, 'Algebra I'),
+    (101, 3, 'Algebra II/Trigonometry'),
+    (102, 3, 'Precalculus'),
+    (103, 4, 'Calculus I'),
+    (104, 4, 'Calculus II'),
+    (105, 4, 'Model theory of second-order intuitionistic modal logics');
 
 call createMessage(100, 3, 1, '2012-09-28 12:34:03', 'What *is* a variable?');
 call createMessage(100, 5, 1, '2012-09-30 12:34:19', 'This class is too hard');

@@ -85,7 +85,7 @@ end //
 create procedure createRole(in rname varchar(50), out rid smallint)
 begin
     insert into role (name) values (rname);
-    select last_insert_id() into rid;
+    set rid := last_insert_id();
 end //
 
 create procedure bindRoleAndPermission(in rid smallint, in pname varchar(50))
@@ -98,7 +98,7 @@ create procedure createAccount(in uname varchar(50), in ufirst varchar(50), in u
 begin
     insert into account (username, password, first_name, last_name, email, enabled) values
         (uname, 'p@ssword', ufirst, ulast, uemail, 1);
-    select last_insert_id() into uid;
+    set uid := last_insert_id();
 end //
 
 create procedure bindAccountAndRole(in uid int, in rname varchar(50))
@@ -111,7 +111,7 @@ create procedure createForum(in fname varchar(250), in fowner varchar(50), out f
 begin
     select @fowner_id := id from account where username = fowner;
     insert into forum (name, owner_id) values (fname, @fowner_id);
-    select last_insert_id() into fid;
+    set fid := last_insert_id();
 end //
 
 create procedure createMessage(in forum int, in author varchar(50), in mdate timestamp, in subj varchar(250))

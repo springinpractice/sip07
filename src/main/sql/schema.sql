@@ -121,10 +121,32 @@ create table acl_entry (
 
 delimiter //
 
-create procedure createForum(in fowner int, in fname varchar(250), out lastid int)
+create procedure createForum(in fowner int, in fname varchar(250), out fid int)
 begin
+	-- Create the forum itself.
     insert into forum (name, owner_id) values (fname, fowner);
-    select last_insert_id() into lastid;
+    select last_insert_id() into fid;
+    
+    -- Look up the Forum class since we'll need it to create the forum's ACL object identity (OID)
+    select @fclass := id from acl_class where class = 'com.springinpractice.ch07.domain.Forum';
+    
+    -- Look up the site object, which is the parent of all forums. We'll need this to create the OID too.
+    select @site := oid.id from acl_object_identity oid, acl_class c where oid.object_id_class = c.id and c.class = 'java.lang.Object';
+    
+    -- Create the ACL OID for this forum
+    -- FIXME Don't pass the fowner ID, we need the SID
+    insert into acl_object_identity (object_id_class, object_id_identity, parent_object, owner_sid) values
+        (@fclass, fid, @site, fowner);
+    select @oid := last_insert_id();
+    
+    -- Now give the forum moderator (owner) read, write, create, delete and admin permissions by creating ACL entries
+    -- against the OID.
+    insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
+        (@oid, 0, fowner, 1),
+        (@oid, 1, fowner, 2),
+        (@oid, 2, fowner, 4),
+        (@oid, 3, fowner, 8),
+        (@oid, 4, fowner, 16);
 end //
 
 create procedure createMessage(in forum int, in author int, in pdate timestamp, in subj varchar(250))

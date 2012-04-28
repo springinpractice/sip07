@@ -1,3 +1,33 @@
+-- =====================================================================================================================
+-- The following records are for the ACL schema. We need to do this basic ACL setup first because we'll need to
+-- reference these records in the stored procedures for creating the forums and messages.
+-- =====================================================================================================================
+
+-- Security IDs: an abstraction over roles and principals representing the "who" piece of the ACL check.
+insert into acl_sid (id, principal, sid) values
+    (100, 0, "ROLE_USER"),
+    (101, 0, "ROLE_ADMIN"),
+    (200, 1, "paula"),
+    (201, 1, "daniel"),
+    (202, 1, "julia"),
+    (203, 1, "elvira"),
+    (204, 1, "juan");
+
+-- Defines the domain object types. This is part of the "what" check. We have a site, forums and messages.
+insert into acl_class (id, class) values
+    (1, "java.lang.Object"),
+    (2, "com.springinpractice.ch07.domain.Forum"),
+    (3, "com.springinpractice.ch07.domain.Message");
+
+-- The site OID.
+insert into acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
+    (1, 1, 1, null, 101, 0);
+
+
+-- =====================================================================================================================
+-- Entities
+-- =====================================================================================================================
+
 insert into account values
     (1, 'paula', 'p@ssword', 'Paula', 'Cazares', 'paula.cazares@example.com', 1),
     (2, 'daniel', 'p@ssword', 'Daniel', 'Cazares', 'daniel.cazares@example.com', 1),
@@ -49,14 +79,12 @@ insert into role_permission (role_id, permission_id) values
     (2, 14), -- admin can delete messages
     (2, 15); -- admin can admin messages
 
-insert into forum (id, owner_id, name) values
-    (100, 3, 'Algebra I'),
-    (101, 3, 'Algebra II/Trigonometry'),
-    (102, 3, 'Precalculus'),
-    (103, 4, 'Calculus I'),
-    (104, 4, 'Calculus II'),
-    (105, 4, 'Model theory of second-order intuitionistic modal logics');
+call createForum(3, 'Algebra I', @fid);
+call createMessage(@fid, 3, '2012-09-28 12:34:03', 'What *is* a variable?');
+call createMessage(@fid, 5, '2012-09-30 12:34:19', 'This class is too hard');
+call createMessage(@fid, 3, '2012-10-01 14:05:21', 'Curses, Descartes');
 
+<<<<<<< HEAD
 call createMessage(100, 3, 1, '2012-09-28 12:34:03', 'What *is* a variable?');
 call createMessage(100, 5, 1, '2012-09-30 12:34:19', 'This class is too hard');
 call createMessage(100, 3, 1, '2012-10-01 14:05:21', 'Curses, Descartes');
@@ -79,42 +107,12 @@ call createMessage(105, 3, 1, '2012-09-30 16:17:16', 'Nonconstructive proof that
 call createMessage(105, 1, 1, '2012-09-30 19:43:53', 'Who is Archimedes Plutonium?');
 
 
--- =====================================================================================================================
--- The following records are for the ACL schema.
--- =====================================================================================================================
 
--- Security IDs: an abstraction over roles and principals representing the "who" piece of the ACL check.
-insert into acl_sid (id, principal, sid) values
-    (100, 0, "ROLE_USER"),
-    (101, 0, "ROLE_ADMIN"),
-    (200, 1, "paula"),
-    (201, 1, "daniel"),
-    (202, 1, "julia"),
-    (203, 1, "elvira"),
-    (204, 1, "juan");
-
--- Defines the domain object types. This is part of the "what" check. We have a site, forums and messages.
-insert into acl_class (id, class) values
-    (1, "java.lang.Object"),
-    (2, "com.springinpractice.ch07.domain.Forum"),
-    (3, "com.springinpractice.ch07.domain.Message");
-
--- Site. This is the other part of the "what" check.
-insert into acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
-    (1, 1, 1, null, 101, 0);
 
 -- Forums and messages. This is also part of the "what" check.
 insert into acl_object_identity (id, object_id_class, object_id_identity, parent_object, owner_sid) values
     
-    -- Forum moderators
-    (100, 2, 100, 1, 202), -- Algebra I forum, moderated by julia
-    (101, 2, 101, 1, 202), -- Algebra II/Trig forum, moderated by julia
-    (102, 2, 102, 1, 202), -- Precalc forum, moderated by julia
-    (103, 2, 103, 1, 203), -- Calc I forum, moderated by elvira
-    (104, 2, 104, 1, 203), -- Calc II forum, moderated by elvira
-    (105, 2, 105, 1, 203), -- Modal Logic forum, moderated by elvira
-    
-    -- Message owners
+    -- Messages
     (106, 3, 100, 100, 202), -- Algebra I messages (parent is forum 100)
     (107, 3, 101, 100, 204),
     (108, 3, 102, 100, 202),
@@ -153,26 +151,31 @@ insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
     (100, 2, 202, 4), -- julia has create for Algebra I
     (100, 3, 202, 8), -- julia has delete for Algebra I
     (100, 4, 202, 16), -- julia has admin for Algebra I
+    
     (101, 0, 202, 1), -- julia has read for Algebra II
     (101, 1, 202, 2), -- julia has write for Algebra II
     (101, 2, 202, 4), -- julia has create for Algebra II
     (101, 3, 202, 8), -- julia has delete for Algebra II
     (101, 4, 202, 16), -- julia has admin for Algebra II
+    
     (102, 0, 202, 1), -- julia has read for Precalc
     (102, 1, 202, 2), -- julia has write for Precalc
     (102, 2, 202, 4), -- julia has create for Precalc
     (102, 3, 202, 8), -- julia has delete for Precalc
     (102, 4, 202, 16), -- julia has admin for Precalc
+    
     (103, 0, 203, 1), -- elvira has read for Calc I
     (103, 1, 203, 2), -- elvira has write for Calc I
     (103, 2, 203, 4), -- elvira has create for Calc I
     (103, 3, 203, 8), -- elvira has delete for Calc I
     (103, 4, 203, 16), -- elvira has admin for Calc I
+    
     (104, 0, 203, 1), -- elvira has read for Calc II
     (104, 1, 203, 2), -- elvira has write for Calc II
     (104, 2, 203, 4), -- elvira has create for Calc II
     (104, 3, 203, 8), -- elvira has delete for Calc II
     (104, 4, 203, 16), -- elvira has admin for Calc II
+    
     (105, 0, 203, 1), -- elvira has read for Modal Logic
     (105, 1, 203, 2), -- elvira has write for Modal Logic
     (105, 2, 203, 4), -- elvira has create for Modal Logic
@@ -198,3 +201,34 @@ insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
     (123, 0, 201, 2), -- daniel has write access (Modal Logic message)
     (124, 0, 202, 2), -- julia has write access (Modal Logic message)
     (125, 0, 200, 2); -- paula has write access (Modal Logic message)
+=======
+call createForum(3, 'Algebra II/Trigonometry', @fid);
+call createMessage(@fid, 4, '2012-09-29 04:01:39', 'now i know how tall that pyramid is');
+call createMessage(@fid, 1, '2012-09-30 16:04:11', 'When will I ever use this??');
+
+call createMessage(@fid, 4, '2012-09-30 14:30:21', 'buy v1@gRA 0nL1n3!');
+update message set visible = 0 where id = last_insert_id();
+
+call createMessage(@fid, 2, '2012-10-01 19:37:00', 'Solving system of linear equations');
+call createMessage(@fid, 2, '2012-10-01 21:58:42', 'Need help applying Gaussian elimination');
+
+call createForum(3, 'Precalculus', @fid);
+call createMessage(@fid, 3, '2012-09-27 16:32:09', 'formula for computing the volume of a sphere');
+call createMessage(@fid, 5, '2012-10-01 17:48:02', 'Isn''t a 96-gon basically the same as a circle');
+call createMessage(@fid, 3, '2012-10-01 17:53:36', 'Join my precalc Facebook group');
+
+call createForum(4, 'Calculus I', @fid);
+
+call createForum(4, 'Calculus II', @fid);
+call createMessage(@fid, 4, '2012-09-27 12:34:56', 'Relationship between differentiation and integration');
+call createMessage(@fid, 2, '2012-09-30 12:43:45', 'Integrating a volume');
+call createMessage(@fid, 1, '2012-10-01 08:23:02', 'epsilon-delta definition of a limit');
+call createMessage(@fid, 3, '2012-10-01 09:56:39', 'Newton or Leibniz');
+call createMessage(@fid, 3, '2012-10-01 11:02:01', 'Help!!! Too many integration rules');
+
+call createForum(4, 'Model theory of second-order intuitionistic modal logics', @fid);
+call createMessage(@fid, 4, '2012-09-23 14:29:06', 'Possible worlds semantics');
+call createMessage(@fid, 2, '2012-09-28 14:31:22', 'Kripke on naming and necessity');
+call createMessage(@fid, 3, '2012-09-30 16:17:16', 'Nonconstructive proof that P != NP. Is it good enough??');
+call createMessage(@fid, 1, '2012-09-30 19:43:53', 'Who is Archimedes Plutonium?');
+>>>>>>> 03

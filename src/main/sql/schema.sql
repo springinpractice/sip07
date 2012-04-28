@@ -77,16 +77,48 @@ create table message (
 
 delimiter //
 
-create procedure createForum(in fowner int, in fname varchar(250), out lastid int)
+create procedure createPermission(in pname varchar(50))
 begin
-    insert into forum (name, owner_id) values (fname, fowner);
-    select last_insert_id() into lastid;
+    insert into permission (name) values (pname);
 end //
 
-create procedure createMessage(in forum int, in author int, in pdate timestamp, in subj varchar(250))
+create procedure createRole(in rname varchar(50), out rid smallint)
 begin
+    insert into role (name) values (rname);
+    select last_insert_id() into rid;
+end //
+
+create procedure bindRoleAndPermission(in rid smallint, in pname varchar(50))
+begin
+    select @pid := id from permission where name = pname;
+    insert into role_permission (role_id, permission_id) values (rid, @pid);
+end //
+
+create procedure createAccount(in uname varchar(50), in ufirst varchar(50), in ulast varchar(50), in uemail varchar(50), out uid int)
+begin
+    insert into account (username, password, first_name, last_name, email, enabled) values
+        (uname, 'p@ssword', ufirst, ulast, uemail, 1);
+    select last_insert_id() into uid;
+end //
+
+create procedure bindAccountAndRole(in uid int, in rname varchar(50))
+begin
+    select @rid := id from role where name = rname;
+    insert into account_role (account_id, role_id) values (uid, @rid);
+end //
+
+create procedure createForum(in fname varchar(250), in fowner varchar(50), out fid int)
+begin
+    select @fowner_id := id from account where username = fowner;
+    insert into forum (name, owner_id) values (fname, @fowner_id);
+    select last_insert_id() into fid;
+end //
+
+create procedure createMessage(in forum int, in author varchar(50), in mdate timestamp, in subj varchar(250))
+begin
+    select @author_id := id from account where username = author;
     insert into message (forum_id, subject, author_id, date_created, text) values (
-        forum, subj, author, pdate,
+        forum, subj, @author_id, mdate,
         '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>'
     );
 end //

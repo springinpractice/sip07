@@ -77,50 +77,45 @@ create table message (
 
 delimiter //
 
-create procedure createPermission(in pname varchar(50))
+create procedure createPermission($name varchar(50))
 begin
-    insert into permission (name) values (pname);
+    insert into permission (name) values ($name);
 end //
 
-create procedure createRole(in rname varchar(50), out rid smallint)
+create procedure createRole($name varchar(50), out $id smallint)
 begin
-    insert into role (name) values (rname);
-    set rid := last_insert_id();
+    insert into role (name) values ($name);
+    set $id := last_insert_id();
 end //
 
-create procedure bindRoleAndPermission(in rid smallint, in pname varchar(50))
+create procedure roleHasPermission($role_id smallint, $perm_name varchar(50))
 begin
-    select @pid := id from permission where name = pname;
-    insert into role_permission (role_id, permission_id) values (rid, @pid);
+    declare _perm_id int;
+    select id from permission where name = $perm_name into _perm_id;
+    insert into role_permission (role_id, permission_id) values ($role_id, _perm_id);
 end //
 
-create procedure createAccount(in uname varchar(50), in ufirst varchar(50), in ulast varchar(50), in uemail varchar(50), out uid int)
+create procedure createAccount($name varchar(50), $first_name varchar(50), $last_name varchar(50), $email varchar(50), out $id int)
 begin
-    insert into account (username, password, first_name, last_name, email, enabled) values
-        (uname, 'p@ssword', ufirst, ulast, uemail, 1);
-    set uid := last_insert_id();
+    insert into account (username, password, first_name, last_name, email, enabled) values ($name, 'p@ssword', $first_name, $last_name, $email, 1);
+    set $id := last_insert_id();
 end //
 
-create procedure bindAccountAndRole(in uid int, in rname varchar(50))
+create procedure accountHasRole($account_id int, $role_id smallint)
 begin
-    select @rid := id from role where name = rname;
-    insert into account_role (account_id, role_id) values (uid, @rid);
+    insert into account_role (account_id, role_id) values ($account_id, $role_id);
 end //
 
-create procedure createForum(in fname varchar(250), in fowner varchar(50), out fid int)
+create procedure createForum($name varchar(250), $owner_id int, out $id smallint)
 begin
-    select @fowner_id := id from account where username = fowner;
-    insert into forum (name, owner_id) values (fname, @fowner_id);
-    set fid := last_insert_id();
+    insert into forum (name, owner_id) values ($name, $owner_id);
+    set $id := last_insert_id();
 end //
 
-create procedure createMessage(in forum int, in author varchar(50), in mdate timestamp, in subj varchar(250))
+create procedure createMessage($forum_id int, $author_id int, $create_date timestamp, $subject varchar(250))
 begin
-    select @author_id := id from account where username = author;
-    insert into message (forum_id, subject, author_id, date_created, text) values (
-        forum, subj, @author_id, mdate,
-        '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>'
-    );
+    insert into message (forum_id, subject, author_id, date_created, text) values
+        ($forum_id, $subject, $author_id, $create_date, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>');
 end //
 
 delimiter ;

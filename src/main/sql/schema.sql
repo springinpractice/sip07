@@ -62,7 +62,7 @@ create table message (
     subject varchar(250) not null,
     author_id int unsigned not null,
     text text(8000) not null,
-    visible boolean not null,
+    visible boolean not null default 1,
     date_created timestamp default 0,
     date_modified timestamp default current_timestamp on update current_timestamp,
     foreign key (forum_id) references forum (id),
@@ -77,10 +77,16 @@ create table message (
 
 delimiter //
 
-create procedure createMessage(in forum int, in author int, in vis boolean, in pdate timestamp, in subj varchar(250))
+create procedure createForum(in fowner int, in fname varchar(250), out lastid int)
 begin
-    insert into message (forum_id, subject, author_id, visible, date_created, text) values (
-        forum, subj, author, vis, pdate,
+    insert into forum (name, owner_id) values (fname, fowner);
+    select last_insert_id() into lastid;
+end //
+
+create procedure createMessage(in forum int, in author int, in pdate timestamp, in subj varchar(250))
+begin
+    insert into message (forum_id, subject, author_id, date_created, text) values (
+        forum, subj, author, pdate,
         '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>'
     );
 end //

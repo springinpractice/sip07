@@ -129,7 +129,7 @@ end //
 create procedure createRole(in rname varchar(50), out rid smallint)
 begin
     insert into role (name) values (rname);
-    select last_insert_id() into rid;
+    set rid := last_insert_id();
     
     -- Create the ACL SID for this role
     insert into acl_sid (principal, sid) values (0, rname);
@@ -137,7 +137,7 @@ end //
 
 create procedure bindRoleAndPermission(in rid smallint, in pname varchar(50))
 begin
-    select @pid := id from permission where name = pname;
+    select id from permission where name = pname into @pid;
     insert into role_permission (role_id, permission_id) values (rid, @pid);
 end //
 
@@ -145,7 +145,7 @@ create procedure createAccount(in uname varchar(50), in ufirst varchar(50), in u
 begin
     insert into account (username, password, first_name, last_name, email, enabled) values
         (uname, 'p@ssword', ufirst, ulast, uemail, 1);
-    select last_insert_id() into uid;
+    set uid := last_insert_id();
     
     -- Create the ACL SID for this account
     insert into acl_sid (principal, sid) values (1, uname);
@@ -153,17 +153,17 @@ end //
 
 create procedure bindAccountAndRole(in uid int, in rname varchar(50))
 begin
-    select @rid := id from role where name = rname;
+    select id from role where name = rname into @rid;
     insert into account_role (account_id, role_id) values (uid, @rid);
 end //
 
 create procedure createSite()
 begin
-    select @class_id := id from acl_class where class = 'java.lang.Object';
-    select @admin_sid := id from acl_sid where sid = 'ROLE_ADMIN';
+    select id from acl_class where class = 'java.lang.Object' into @class_id;
+    select id from acl_sid where sid = 'ROLE_ADMIN' into @admin_sid;
     
-    -- The site is effectively java.lang.Object #1.
-    insert into acl_object_identity (object_id_class, object_identity, owner_sid, entries_inheriting) values
+    -- Create the ACL OID for the site.
+    insert into acl_object_identity (object_id_class, object_id_identity, owner_sid, entries_inheriting) values
         (@class_id, 1, @admin_sid, 0);
 end //
 
@@ -171,28 +171,31 @@ create procedure createForum(in fname varchar(250), in fowner varchar(50), out f
 begin
     
     -- Find the forum owner
-    select @fowner_id := id from account where username = fowner;
+    select id from account where username = fowner into @fowner_id;
     
     -- Create the forum, setting the owner
     insert into forum (name, owner_id) values (fname, @fowner_id);
-    select last_insert_id() into fid;
+    set fid := last_insert_id();
     
     -- Now we need to create the ACL for this forum
     
     -- Look up the Forum class since we'll need it to create the forum's ACL object identity (OID)
-    select @fclass := id from acl_class where class = 'com.springinpractice.ch07.domain.Forum';
+    select id from acl_class where class = 'com.springinpractice.ch07.domain.Forum' into @fclass;
     
     -- Look up the site object, which is the parent of all forums. We'll need this to create the OID too.
-    select @site := oid.id from acl_object_identity oid, acl_class c where oid.object_id_class = c.id and c.class = 'java.lang.Object';
+    select oid.id
+        from acl_object_identity oid, acl_class c
+        where oid.object_id_class = c.id and c.class = 'java.lang.Object'
+        into @site;
     
     -- Look up the owner's SID
-    select @owner_sid := id from acl_sid where sid = fowner;
+    select id from acl_sid where sid = fowner into @owner_sid;
     
     -- Create the ACL OID for this forum
     -- FIXME Don't pass the fowner ID, we need the SID
     insert into acl_object_identity (object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
         (@fclass, fid, @site, @owner_sid, 1);
-    select @forum_oid := last_insert_id();
+    set @forum_oid := last_insert_id();
     
     -- Give the owner read, write, create, delete and admin permissions by creating a forum ACL.
     -- Bitwise permission mask semantics: read (bit 0), write (bit 1), create (bit 2), delete (bit 3), admin (bit 4).

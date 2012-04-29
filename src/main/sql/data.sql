@@ -59,12 +59,11 @@ call accountHasRole(@juan, @role_admin);
 
 -- Create site, forums and messages
 
-insert into acl_class (class) values
-    ('java.lang.Object'),
-    ('com.springinpractice.ch07.domain.Forum'),
-    ('com.springinpractice.ch07.domain.Message');
+call createAclClass('java.lang.Object', @site_class);
+call createAclClass('com.springinpractice.ch07.domain.Forum', @forum_class);
+call createAclClass('com.springinpractice.ch07.domain.Message', @message_class);
 
-call createSite();
+call createSite(@site_oid);
 
 call createForum('Algebra I', @julia, @forum);
 call createMessage(@forum, @julia, '2012-09-28 12:34:03', 'What *is* a variable?');

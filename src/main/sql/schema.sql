@@ -156,19 +156,31 @@ begin
     insert into account_role (account_id, role_id) values ($account_id, $role_id);
 end //
 
-create procedure createSite()
+create procedure createAclClass($name varchar(100), out $id smallint)
 begin
-	declare _class_id smallint;
-    select id from acl_class where class = 'java.lang.Object' into _class_id;
-    
+    insert into acl_class (class) values ($name);
+    set $id := last_insert_id();
+end //
+
+create procedure createSite(out $site_oid int)
+begin
     -- Create the ACL OID for the site.
     insert into acl_object_identity (object_id_class, object_id_identity, owner_sid, entries_inheriting) values
-        (@class_id, 1, @role_admin, 0);
+        (@site_class, 1, @role_admin, 0);
+    set $site_oid := last_insert_id();
+    
+    -- Create the ACL for the site.
+    insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
+        ($site_oid, 0, @role_user, 1), -- read
+        ($site_oid, 1, @role_admin, 1), -- read
+        ($site_oid, 2, @role_admin, 2), -- write
+        ($site_oid, 3, @role_admin, 4), -- create
+        ($site_oid, 4, @role_admin, 8), -- delete
+        ($site_oid, 5, @role_admin, 16); -- admin
 end //
 
 create procedure createForum($name varchar(250), $owner_id int, out $id smallint)
 begin
-    declare _forum_class varchar(100);
     declare _site_oid int;
     declare _owner_sid int;
     declare _forum_oid smallint;
@@ -178,15 +190,10 @@ begin
     
     -- Now we need to create the ACL for this forum
     
-    -- Create thr forum OID.
-    select id from acl_class where class = 'com.springinpractice.ch07.domain.Forum' into _forum_class;
-    select oid.id
-        from acl_object_identity oid, acl_class c
-        where oid.object_id_class = c.id and c.class = 'java.lang.Object'
-        into _site_oid;
-    select id from acl_sid where sid = fowner into _owner_sid;
+    -- Create the forum OID.
+    select s.id from account a, acl_sid s where a.id = $owner_id and a.username = s.sid into _owner_sid;
     insert into acl_object_identity (object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
-        (_forum_class, $id, _site_oid, _owner_sid, 1);
+        (@forum_class, $id, @site_oid, _owner_sid, 1);
     set _forum_oid := last_insert_id();
     
     -- Give the owner read, write, create, delete and admin permissions by creating a forum ACL.
@@ -201,39 +208,27 @@ begin
         (_forum_oid, 4, _owner_sid, 16); -- admin
 end //
 
-
-
-
-
-
 create procedure createMessage($forum_id int, $author_id int, $create_date timestamp, $subject varchar(250))
 begin
-<<<<<<< HEAD
-    select @author_id := id from account where username = author;
-    insert into message (forum_id, subject, author_id, date_created, text) values (
-        forum, subj, @author_id, mdate,
-        '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>'
-    );
-    set @msg_id := last_insert_id();
+    declare _id int;
+    declare _forum_oid smallint;
+    declare _message_oid int;
+    declare _author_sid int;
     
-    -- Look up the Message class.
-    select @msg_class := id from acl_class where class = 'com.springinpractice.ch07.domain.Message';
-    
-    -- Look up the author's SID
-    select @author_sid := id from acl_sid where sid = author;
+    insert into message (forum_id, subject, author_id, date_created, text) values
+        ($forum_id, $subject, $author_id, $create_date, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>');
+    set _id := last_insert_id();
     
     -- Create the ACL OID for this message
+    select id from acl_object_identity where object_id_class = @forum_class and object_id_identity = $forum_id into _forum_oid;
+    select s.id from account a, acl_sid s where a.id = $author_id and a.username = s.sid into _author_sid;
     insert into acl_object_identity (object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
-        (@msg_class, @msg_id, @forum_oid, @author_sid, 1);
-    select @msg_oid := last_insert_id();
+        (@message_class, _id, _forum_oid, _author_sid, 1);
+    set _message_oid := last_insert_id();
     
     -- Give the author write access to the message.
     insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
-        (@msg_oid, 0, @author_sid, 2); -- write
-=======
-    insert into message (forum_id, subject, author_id, date_created, text) values
-        ($forum_id, $subject, $author_id, $create_date, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>');
->>>>>>> 03
+        (_message_oid, 0, _author_sid, 2); -- write
 end //
 
 delimiter ;

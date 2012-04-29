@@ -121,96 +121,94 @@ create table acl_entry (
 
 delimiter //
 
-create procedure createPermission(in pname varchar(50))
+create procedure createPermission($name varchar(50))
 begin
-    insert into permission (name) values (pname);
+    insert into permission (name) values ($name);
 end //
 
-create procedure createRole(in rname varchar(50), out rid smallint)
+create procedure createRole($name varchar(50), out $id smallint)
 begin
-    insert into role (name) values (rname);
-    set rid := last_insert_id();
+    insert into role (name) values ($name);
+    set $id := last_insert_id();
     
     -- Create the ACL SID for this role
-    insert into acl_sid (principal, sid) values (0, rname);
+    insert into acl_sid (principal, sid) values (0, $name);
 end //
 
-create procedure bindRoleAndPermission(in rid smallint, in pname varchar(50))
+create procedure roleHasPermission($role_id smallint, $perm_name varchar(50))
 begin
-    select id from permission where name = pname into @pid;
-    insert into role_permission (role_id, permission_id) values (rid, @pid);
+    declare _perm_id int;
+    select id from permission where name = $perm_name into _perm_id;
+    insert into role_permission (role_id, permission_id) values ($role_id, _perm_id);
 end //
 
-create procedure createAccount(in uname varchar(50), in ufirst varchar(50), in ulast varchar(50), in uemail varchar(50), out uid int)
+create procedure createAccount($name varchar(50), $first_name varchar(50), $last_name varchar(50), $email varchar(50), out $id int)
 begin
-    insert into account (username, password, first_name, last_name, email, enabled) values
-        (uname, 'p@ssword', ufirst, ulast, uemail, 1);
-    set uid := last_insert_id();
+    insert into account (username, password, first_name, last_name, email, enabled) values ($name, 'p@ssword', $first_name, $last_name, $email, 1);
+    set $id := last_insert_id();
     
     -- Create the ACL SID for this account
-    insert into acl_sid (principal, sid) values (1, uname);
+    insert into acl_sid (principal, sid) values (1, $name);
 end //
 
-create procedure bindAccountAndRole(in uid int, in rname varchar(50))
+create procedure accountHasRole($account_id int, $role_id smallint)
 begin
-    select id from role where name = rname into @rid;
-    insert into account_role (account_id, role_id) values (uid, @rid);
+    insert into account_role (account_id, role_id) values ($account_id, $role_id);
 end //
 
 create procedure createSite()
 begin
-    select id from acl_class where class = 'java.lang.Object' into @class_id;
-    select id from acl_sid where sid = 'ROLE_ADMIN' into @admin_sid;
+	declare _class_id smallint;
+    select id from acl_class where class = 'java.lang.Object' into _class_id;
     
     -- Create the ACL OID for the site.
     insert into acl_object_identity (object_id_class, object_id_identity, owner_sid, entries_inheriting) values
-        (@class_id, 1, @admin_sid, 0);
+        (@class_id, 1, @role_admin, 0);
 end //
 
-create procedure createForum(in fname varchar(250), in fowner varchar(50), out fid int)
+create procedure createForum($name varchar(250), $owner_id int, out $id smallint)
 begin
+    declare _forum_class varchar(100);
+    declare _site_oid int;
+    declare _owner_sid int;
+    declare _forum_oid smallint;
     
-    -- Find the forum owner
-    select id from account where username = fowner into @fowner_id;
-    
-    -- Create the forum, setting the owner
-    insert into forum (name, owner_id) values (fname, @fowner_id);
-    set fid := last_insert_id();
+    insert into forum (name, owner_id) values ($name, $owner_id);
+    set $id := last_insert_id();
     
     -- Now we need to create the ACL for this forum
     
-    -- Look up the Forum class since we'll need it to create the forum's ACL object identity (OID)
-    select id from acl_class where class = 'com.springinpractice.ch07.domain.Forum' into @fclass;
-    
-    -- Look up the site object, which is the parent of all forums. We'll need this to create the OID too.
+    -- Create thr forum OID.
+    select id from acl_class where class = 'com.springinpractice.ch07.domain.Forum' into _forum_class;
     select oid.id
         from acl_object_identity oid, acl_class c
         where oid.object_id_class = c.id and c.class = 'java.lang.Object'
-        into @site;
-    
-    -- Look up the owner's SID
-    select id from acl_sid where sid = fowner into @owner_sid;
-    
-    -- Create the ACL OID for this forum
-    -- FIXME Don't pass the fowner ID, we need the SID
+        into _site_oid;
+    select id from acl_sid where sid = fowner into _owner_sid;
     insert into acl_object_identity (object_id_class, object_id_identity, parent_object, owner_sid, entries_inheriting) values
-        (@fclass, fid, @site, @owner_sid, 1);
-    set @forum_oid := last_insert_id();
+        (_forum_class, $id, _site_oid, _owner_sid, 1);
+    set _forum_oid := last_insert_id();
     
     -- Give the owner read, write, create, delete and admin permissions by creating a forum ACL.
     -- Bitwise permission mask semantics: read (bit 0), write (bit 1), create (bit 2), delete (bit 3), admin (bit 4).
     -- WARNING: The "mask" isn't really a mask at all as you can set only one bit at a time! See
     -- http://jira.springframework.org/browse/SEC-1140
     insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
-        (@forum_oid, 0, @owner_sid, 1), -- read
-        (@forum_oid, 1, @owner_sid, 2), -- write
-        (@forum_oid, 2, @owner_sid, 4), -- create
-        (@forum_oid, 3, @owner_sid, 8), -- delete
-        (@forum_oid, 4, @owner_sid, 16); -- admin
+        (_forum_oid, 0, _owner_sid, 1), -- read
+        (_forum_oid, 1, _owner_sid, 2), -- write
+        (_forum_oid, 2, _owner_sid, 4), -- create
+        (_forum_oid, 3, _owner_sid, 8), -- delete
+        (_forum_oid, 4, _owner_sid, 16); -- admin
 end //
 
-create procedure createMessage(in forum int, in author varchar(50), in mdate timestamp, in subj varchar(250))
+
+
+
+
+
+create procedure createMessage($forum_id int, $author_id int, $create_date timestamp, $subject varchar(250))
 begin
+<<<<<<< HEAD
     select @author_id := id from account where username = author;
     insert into message (forum_id, subject, author_id, date_created, text) values (
         forum, subj, @author_id, mdate,
@@ -232,6 +230,10 @@ begin
     -- Give the author write access to the message.
     insert into acl_entry (acl_object_identity, ace_order, sid, mask) values
         (@msg_oid, 0, @author_sid, 2); -- write
+=======
+    insert into message (forum_id, subject, author_id, date_created, text) values
+        ($forum_id, $subject, $author_id, $create_date, '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in odio ligula. Aliquam massa magna, auctor eget viverra eget, euismod nec dolor. Quisque suscipit feugiat ipsum a porttitor. Fusce dolor lectus, accumsan ut faucibus et, elementum eget leo. Curabitur sodales dui fringilla mi pretium faucibus. Praesent nulla dolor, iaculis vel tempus eu, venenatis consequat ipsum. Nunc eros lorem, interdum non fringilla eu, lobortis at nulla. Vivamus eu ligula at quam adipiscing pellentesque. Praesent vitae erat sit amet felis eleifend egestas ut vel leo. Phasellus ultrices dui ut odio condimentum tristique. Sed ultricies justo at turpis tempus semper. Nulla consequat libero ut nunc facilisis viverra. Fusce molestie pulvinar varius. Vestibulum luctus nisl urna. Nam bibendum feugiat enim, faucibus mollis elit vehicula fermentum.</p>');
+>>>>>>> 03
 end //
 
 delimiter ;

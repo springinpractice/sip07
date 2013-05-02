@@ -1,0 +1,13 @@
+========================================================================================================================
+README - Spring in Practice Recipe 7.4
+
+Copyright (c) 2013 Manning Publications Co.
+
+Willie Wheeler (willie.wheeler@gmail.com)
+
+Book: http://manning.com/wheeler/
+Blog: http://springinpractice.com/
+Code: https://github.com/springinpractice
+========================================================================================================================
+
+We authorize method invocations based on Spring Security ACLs in recipe 7.4.

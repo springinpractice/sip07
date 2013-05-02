@@ -1,3 +1,10 @@
+/* 
+ * Copyright (c) 2013 Manning Publications Co.
+ * 
+ * Book: http://manning.com/wheeler/
+ * Blog: http://springinpractice.com/
+ * Code: https://github.com/springinpractice
+ */
 package com.springinpractice.ch07.domain;
 
 import javax.persistence.Column;
@@ -10,6 +17,9 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * @author Willie Wheeler (willie.wheeler@gmail.com)
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "permission")

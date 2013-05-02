@@ -1,3 +1,10 @@
+/* 
+ * Copyright (c) 2013 Manning Publications Co.
+ * 
+ * Book: http://manning.com/wheeler/
+ * Blog: http://springinpractice.com/
+ * Code: https://github.com/springinpractice
+ */
 package com.springinpractice.ch07.domain;
 
 import java.util.Collection;
@@ -20,6 +27,9 @@ import javax.persistence.Transient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * @author Willie Wheeler (willie.wheeler@gmail.com)
+ */
 @Entity
 @Table(name = "account")
 @NamedQuery(

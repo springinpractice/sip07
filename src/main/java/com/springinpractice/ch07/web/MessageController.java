@@ -1,3 +1,10 @@
+/* 
+ * Copyright (c) 2013 Manning Publications Co.
+ * 
+ * Book: http://manning.com/wheeler/
+ * Blog: http://springinpractice.com/
+ * Code: https://github.com/springinpractice
+ */
 package com.springinpractice.ch07.web;
 
 import java.io.IOException;
@@ -29,6 +36,9 @@ import com.springinpractice.ch07.domain.Account;
 import com.springinpractice.ch07.domain.Message;
 import com.springinpractice.ch07.service.ForumService;
 
+/**
+ * @author Willie Wheeler (willie.wheeler@gmail.com)
+ */
 @Controller
 public class MessageController {
 	private static final Logger log = LoggerFactory.getLogger(MessageController.class);

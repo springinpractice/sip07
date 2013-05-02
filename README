@@ -1,0 +1,13 @@
+========================================================================================================================
+README - Spring in Practice Recipe 7.3
+
+Copyright (c) 2013 Manning Publications Co.
+
+Willie Wheeler (willie.wheeler@gmail.com)
+
+Book: http://manning.com/wheeler/
+Blog: http://springinpractice.com/
+Code: https://github.com/springinpractice
+========================================================================================================================
+
+Recipe 7.3 demonstrates how to use Spring Security to protect access to web URLs.

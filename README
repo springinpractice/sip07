@@ -1,5 +1,5 @@
 ========================================================================================================================
-README - Spring in Practice Recipe 7.4
+README - Spring in Practice Recipe 7.5
 
 Copyright (c) 2013 Manning Publications Co.
 
@@ -10,4 +10,4 @@ Blog: http://springinpractice.com/
 Code: https://github.com/springinpractice
 ========================================================================================================================
 
-We authorize method invocations based on Spring Security ACLs in recipe 7.4.
+Recipe 7.5 shows how to display JSP fragments selectively based on ACLs.

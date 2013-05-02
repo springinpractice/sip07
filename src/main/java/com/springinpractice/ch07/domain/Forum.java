@@ -1,3 +1,10 @@
+/* 
+ * Copyright (c) 2013 Manning Publications Co.
+ * 
+ * Book: http://manning.com/wheeler/
+ * Blog: http://springinpractice.com/
+ * Code: https://github.com/springinpractice
+ */
 package com.springinpractice.ch07.domain;
 
 import java.util.ArrayList;
@@ -16,6 +23,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * @author Willie Wheeler (willie.wheeler@gmail.com)
+ */
 @Entity
 @Table(name = "forum")
 @NamedQuery(

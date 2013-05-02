@@ -1,0 +1,13 @@
+========================================================================================================================
+README - Spring in Practice Recipe 7.1
+
+Copyright (c) 2013 Manning Publications Co.
+
+Willie Wheeler (willie.wheeler@gmail.com)
+
+Book: http://manning.com/wheeler/
+Blog: http://springinpractice.com/
+Code: https://github.com/springinpractice
+========================================================================================================================
+
+Authorize method calls based on user roles. Based on a paranoid "deny all" whitelisting approach.

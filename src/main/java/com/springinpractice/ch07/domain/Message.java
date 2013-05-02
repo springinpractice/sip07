@@ -1,3 +1,10 @@
+/* 
+ * Copyright (c) 2013 Manning Publications Co.
+ * 
+ * Book: http://manning.com/wheeler/
+ * Blog: http://springinpractice.com/
+ * Code: https://github.com/springinpractice
+ */
 package com.springinpractice.ch07.domain;
 
 import java.util.Date;
@@ -14,6 +21,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * @author Willie Wheeler (willie.wheeler@gmail.com)
+ */
 @Entity
 @Table(name = "message")
 public class Message {

@@ -1,5 +1,5 @@
 ========================================================================================================================
-README - Spring in Practice Recipe 7.1
+README - Spring in Practice Recipe 7.2
 
 Copyright (c) 2013 Manning Publications Co.
 
@@ -10,4 +10,4 @@ Blog: http://springinpractice.com/
 Code: https://github.com/springinpractice
 ========================================================================================================================
 
-Authorize method calls based on user roles. Based on a paranoid "deny all" whitelisting approach.
+In recipe 7.2 we display page content based on authentication level and role.
